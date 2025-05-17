@@ -12,7 +12,7 @@ class ReservaDAO{
             error_log("[ReservaDAO] Erro: " . $message);
         }
 
-    public function insertReserva(Reserva $reserva) {
+    public function CreateReserva(Reserva $reserva) {
         $sql = "INSERT INTO reservas (id_imovel, nome_cliente, email, data_reserva) VALUES(?, ?, ?, ?)";
         $query = $this->pdo->prepare($sql);
         return $query->execute([$reserva->getIdImovel(),
@@ -22,7 +22,7 @@ class ReservaDAO{
          ]);
     }  
 
-    public function listReserva() {
+    public function ReadReserva() {
         $stmt = $this->pdo->query("SELECT * FROM reservas");
         $reservas = [];
     
@@ -40,7 +40,7 @@ class ReservaDAO{
 
 
 
-    public function updateReserva(Reserva $reserva) {
+    public function UpdateReserva(Reserva $reserva) {
     try {
         $sql = "UPDATE reservas SET nome_cliente = ?, data_reserva = ?, id_imovel = ? ,email = ? WHERE id = ?";
         $query = $this->pdo->prepare($sql);
@@ -60,7 +60,7 @@ class ReservaDAO{
     }
 }
 
-public function deletarReserva($id) {
+public function DeleteReserva($id) {
     try {
         if (!is_numeric($id)) {
             return false;
