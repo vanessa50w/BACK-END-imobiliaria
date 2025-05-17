@@ -28,6 +28,3 @@ Este projeto é um sistema básico de reservas para uma imobiliária, que permit
 2. Atualize as configurações de conexão em `Conexao.php`.
 3. Coloque os arquivos no servidor local (XAMPP, WAMP ou similar).
 4. Acesse via navegador o sistema para visualizar, criar, editar e deletar reservas.
-
-## Contato
-Para dúvidas ou sugestões, entre em contato pelo email: seuemail@exemplo.com
