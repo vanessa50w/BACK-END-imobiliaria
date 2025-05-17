@@ -13,10 +13,11 @@ class ReservaDAO{
         }
 
     public function insertReserva(Reserva $reserva) {
-        $sql = "INSERT INTO reservas (id_imovel, nome_cliente, data_reserva) VALUES(?, ?, ?)";
+        $sql = "INSERT INTO reservas (id_imovel, nome_cliente, email, data_reserva) VALUES(?, ?, ?, ?)";
         $query = $this->pdo->prepare($sql);
         return $query->execute([$reserva->getIdImovel(),
          $reserva->getNomeCliente(), 
+         $reserva->getEmail(),
          $reserva->getDataReserva()
          ]);
     }  
@@ -29,6 +30,7 @@ class ReservaDAO{
             $reserva = new Reserva();
             $reserva->setId($row['id']);
             $reserva->setNomeCliente($row['nome_cliente']);
+            $reserva->setEmail($row['email']);
             $reserva->setDataReserva($row['data_reserva']);
             $reservas[] = $reserva;
         }
@@ -40,12 +42,13 @@ class ReservaDAO{
 
     public function updateReserva(Reserva $reserva) {
     try {
-        $sql = "UPDATE reservas SET nome_cliente = ?, data_reserva = ?, id_imovel = ? WHERE id = ?";
+        $sql = "UPDATE reservas SET nome_cliente = ?, data_reserva = ?, id_imovel = ? ,email = ? WHERE id = ?";
         $query = $this->pdo->prepare($sql);
         $success = $query->execute([
             $reserva->getNomeCliente(),
             $reserva->getDataReserva(),
             $reserva->getIdImovel(),
+            $reserva->getEmail(),
             $reserva->getId()
         ]);
         
