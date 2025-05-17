@@ -1,35 +1,33 @@
-Sistema de Reservas para Imobiliária
-Projeto para gerenciar reservas de imóveis com interface amigável e backend robusto.
+# Projeto Imobiliária - Sistema de Reservas
 
-Descrição
-Sistema web completo que permite ao usuário visualizar imóveis disponíveis, fazer reservas informando seus dados pessoais, além de consultar, editar e excluir reservas realizadas.
+## Descrição
+Este projeto é um sistema básico de reservas para uma imobiliária, que permite aos usuários visualizar imóveis, reservar, editar e deletar reservas. O backend é feito em PHP usando PDO para conexão com banco de dados MySQL, e a interface é feita com HTML/CSS.
 
-Funcionalidades principais
-Visualizar lista de imóveis para reserva
+## Funcionalidades Principais
+- Visualizar lista de imóveis disponíveis
+- Reservar imóvel com dados pessoais (nome, email, data da reserva)
+- Visualizar as reservas feitas
+- Editar e deletar reservas (CRUD completo)
+- Interface amigável com HTML e CSS
+- Backend seguro usando PHP com PDO para acesso ao banco de dados MySQL
 
-Reservar imóvel informando dados pessoais (nome, email, data)
+## Tecnologias Utilizadas
+- PHP
+- PDO (PHP Data Objects)
+- MySQL
+- HTML / CSS
 
-Consultar reservas feitas
+## Estrutura do Projeto
+- `/model` - Classes PHP que representam os dados (Reserva.php, ReservaDAO.php)
+- `/controller` - Controladores que gerenciam a lógica de negócios e chamadas do usuário (se houver)
+- `/view` - Arquivos HTML/CSS para a interface do usuário
+- `/config` - Arquivos de configuração (ex: Conexao.php para conexão com o banco)
 
-Editar e deletar reservas (CRUD completo)
+## Como Executar
+1. Configure seu banco de dados MySQL e importe o script SQL para criar a tabela `reservas`.
+2. Atualize as configurações de conexão em `Conexao.php`.
+3. Coloque os arquivos no servidor local (XAMPP, WAMP ou similar).
+4. Acesse via navegador o sistema para visualizar, criar, editar e deletar reservas.
 
-Interface amigável com HTML e CSS
-
-Backend em PHP orientado a objetos utilizando PDO
-
-Banco de dados MySQL para armazenamento seguro e eficiente
-
-Tecnologias utilizadas
-PHP (POO)
-MySQL
-
-PDO para acesso ao banco
-
-HTML/CSS para front-end
-
-Como usar
-Configurar o banco MySQL e ajustar conexões no arquivo de configuração.
-
-Rodar o backend PHP.
-
-Utilizar a interface para gerenciar reservas.
+## Contato
+Para dúvidas ou sugestões, entre em contato pelo email: seuemail@exemplo.com
