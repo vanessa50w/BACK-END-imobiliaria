@@ -13,11 +13,10 @@ class ReservaDAO{
         }
 
     public function CreateReserva(Reserva $reserva) {
-        $sql = "INSERT INTO reservas (id_imovel, nome_cliente, email, data_reserva) VALUES(?, ?, ?, ?)";
+        $sql = "INSERT INTO reservas (id_imovel, nome_cliente,data_reserva) VALUES(?, ?, ?)";
         $query = $this->pdo->prepare($sql);
         return $query->execute([$reserva->getIdImovel(),
          $reserva->getNomeCliente(), 
-         $reserva->getEmail(),
          $reserva->getDataReserva()
          ]);
     }  
@@ -30,7 +29,6 @@ class ReservaDAO{
             $reserva = new Reserva();
             $reserva->setId($row['id']);
             $reserva->setNomeCliente($row['nome_cliente']);
-            $reserva->setEmail($row['email']);
             $reserva->setDataReserva($row['data_reserva']);
             $reservas[] = $reserva;
         }
@@ -42,13 +40,12 @@ class ReservaDAO{
 
     public function UpdateReserva(Reserva $reserva) {
     try {
-        $sql = "UPDATE reservas SET nome_cliente = ?, data_reserva = ?, id_imovel = ? ,email = ? WHERE id = ?";
+        $sql = "UPDATE reservas SET nome_cliente = ?, data_reserva = ?, id_imovel = ? WHERE id = ?";
         $query = $this->pdo->prepare($sql);
         $success = $query->execute([
             $reserva->getNomeCliente(),
             $reserva->getDataReserva(),
             $reserva->getIdImovel(),
-            $reserva->getEmail(),
             $reserva->getId()
         ]);
         
@@ -69,7 +66,7 @@ public function DeleteReserva($id) {
         $query = $this->pdo->prepare("DELETE FROM reservas WHERE id = ?");
         $success = $query->execute([$id]);
         
-        // Retorna true somente se alguma linha foi deletada
+
         return $success && $query->rowCount() > 0;
     } catch (PDOException $e) {
         $this->logError("Erro ao deletar reserva: " . $e->getMessage());

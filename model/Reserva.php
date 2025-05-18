@@ -3,7 +3,6 @@ class Reserva{
 private $id;
 private $id_imovel;
 private $nome_cliente;
-private $email;
 private $data_reserva;
 
     public function getId() {
@@ -27,15 +26,6 @@ private $data_reserva;
     }
     public function setNomeCliente($nome_cliente) {
         $this->nome_cliente = $nome_cliente;
-    }
-
-
-    public function getEmail() {
-        return $this->email;
-    }
-    
-    public function setEmail($email) {
-        $this->email = $email;
     }
 
 
