@@ -12,33 +12,52 @@ class ReservaDAO{
             error_log("[ReservaDAO] Erro: " . $message);
         }
 
-    public function CreateReserva(Reserva $reserva) {
-        $sql = "INSERT INTO reservas (id_imovel, nome_cliente,data_reserva) VALUES(?, ?, ?)";
-        $query = $this->pdo->prepare($sql);
-        return $query->execute([$reserva->getIdImovel(),
-         $reserva->getNomeCliente(), 
-         $reserva->getDataReserva()
-         ]);
-    }  
 
-    public function ReadReserva() {
-        $stmt = $this->pdo->query("SELECT * FROM reservas");
-        $reservas = [];
-    
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $reserva = new Reserva();
-            $reserva->setId($row['id']);
-            $reserva->setNomeCliente($row['nome_cliente']);
-            $reserva->setDataReserva($row['data_reserva']);
-            $reservas[] = $reserva;
+
+
+        
+    public function createReserva(Reserva $reserva) {
+        try {
+            $sql = "INSERT INTO reservas (id_imovel, nome_cliente, data_reserva) VALUES (?, ?, ?)";
+            $query = $this->pdo->prepare($sql);
+            return $query->execute([
+                $reserva->getIdImovel(),
+                $reserva->getNomeCliente(),
+                $reserva->getDataReserva()
+            ]);
+        } catch (PDOException $e) {
+            $this->logError("Erro ao criar reserva: " . $e->getMessage());
+            return false;
         }
-    
-        return $reservas;
     }
 
 
 
-    public function UpdateReserva(Reserva $reserva) {
+
+    public function readReserva() {
+        try {
+            $stmt = $this->pdo->query("SELECT * FROM reservas");
+            $reservas = [];
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $reserva = new Reserva();
+                $reserva->setId($row['id']);
+                $reserva->setIdImovel($row['id_imovel']);
+                $reserva->setNomeCliente($row['nome_cliente']);
+                $reserva->setDataReserva($row['data_reserva']);
+                $reservas[] = $reserva;
+            }
+
+            return $reservas;
+        } catch (PDOException $e) {
+            $this->logError("Erro ao ler reservas: " . $e->getMessage());
+            return [];
+        }
+    }
+
+
+
+    public function updateReserva(Reserva $reserva) {
     try {
         $sql = "UPDATE reservas SET nome_cliente = ?, data_reserva = ?, id_imovel = ? WHERE id = ?";
         $query = $this->pdo->prepare($sql);
@@ -57,7 +76,7 @@ class ReservaDAO{
     }
 }
 
-public function DeleteReserva($id) {
+public function deleteReserva($id) {
     try {
         if (!is_numeric($id)) {
             return false;
