@@ -1,6 +1,6 @@
 <?php
-require_once 'Conexao.php';
-require_once 'reserva.php';
+require_once '../config/conexao.php';
+require_once 'Reserva.php';
 
 class ReservaDAO{
     private $pdo;
