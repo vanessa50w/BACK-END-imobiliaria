@@ -24,8 +24,9 @@ class ReservaDAO{
                 $reserva->getIdImovel(),
                 $reserva->getNomeCliente(),
                 $reserva->getDataReserva()
-            ]);
-        } catch (PDOException $e) {
+            ]);}
+        
+        catch (PDOException $e) {
             $this->logError("Erro ao criar reserva: " . $e->getMessage());
             return false;
         }
@@ -35,25 +36,25 @@ class ReservaDAO{
 
 
     public function readReserva() {
-        try {
-            $stmt = $this->pdo->query("SELECT * FROM reservas");
-            $reservas = [];
+  try {
+        $query = $this->pdo->query("SELECT * FROM reservas");
+        $reservas = [];
 
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $reserva = new Reserva();
-                $reserva->setId($row['id']);
-                $reserva->setIdImovel($row['id_imovel']);
-                $reserva->setNomeCliente($row['nome_cliente']);
-                $reserva->setDataReserva($row['data_reserva']);
-                $reservas[] = $reserva;
-            }
-
-            return $reservas;
-        } catch (PDOException $e) {
-            $this->logError("Erro ao ler reservas: " . $e->getMessage());
-            return [];
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $reserva = new Reserva();
+            $reserva->setId($row['id']);
+            $reserva->setIdImovel($row['id_imovel']);
+            $reserva->setNomeCliente($row['nome_cliente']);
+            $reserva->setDataReserva($row['data_reserva']);
+            $reservas[] = $reserva;
         }
+
+        return $reservas;
+    } catch (PDOException $e) {
+        $this->logError("Erro ao ler reservas: " . $e->getMessage());
+        return [];
     }
+}
 
 
 
