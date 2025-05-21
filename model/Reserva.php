@@ -1,41 +1,47 @@
 <?php
-class Reserva{
-private $id;
-private $id_imovel;
-private $nome_cliente;
-private $data_reserva;
+class Reserva {
+    private $id;
+    private $nome_cliente;
+    private $data_reserva;
+    private $id_imovel;
+
+    public function __construct($id = null, $nome_cliente = null, $data_reserva = null, $id_imovel = null) {
+        $this->id = $id;
+        $this->nome_cliente = $nome_cliente;
+        $this->data_reserva = $data_reserva;
+        $this->id_imovel = $id_imovel;
+    }
 
     public function getId() {
         return $this->id;
     }
-    public function setId($id) {
-        $this->id = $id;
-    }
-
-
-    public function getIdImovel() {
-        return $this->id_imovel;
-    }
-    public function setIdImovel($id_imovel) {
-        $this->id_imovel = $id_imovel;
-    }
-
 
     public function getNomeCliente() {
         return $this->nome_cliente;
     }
-    public function setNomeCliente($nome_cliente) {
-        $this->nome_cliente = $nome_cliente;
-    }
-
 
     public function getDataReserva() {
         return $this->data_reserva;
     }
+
+    public function getIdImovel() {
+        return $this->id_imovel;
+    }
+
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    public function setNomeCliente($nome_cliente) {
+        $this->nome_cliente = $nome_cliente;
+    }
+
     public function setDataReserva($data_reserva) {
         $this->data_reserva = $data_reserva;
     }
+
+    public function setIdImovel($id_imovel) {
+        $this->id_imovel = $id_imovel;
+    }
 }
-
-
-?>
+?> 

@@ -1,27 +1,26 @@
 <?php
+
 class Conexao {
-    private static $instancia;
+    private static $instance = null;
     private $conexao;
 
     private function __construct() {
         try {
-            $this->conexao = new PDO("mysql:host=localhost;dbname=imobiliaria", "usuario", "senha");
-            $this->conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conexao->exec("SET NAMES utf8");
-        } catch (PDOException $e) {
-            die("Erro na conexão: " . $e->getMessage());
+            $this->conexao = new PDO(
+                "pgsql:host=localhost;dbname=imobiliaria",
+                "postgres",
+                "4321",
+                [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+            );
+        } catch (\PDOException $e) {
+            throw new \Exception("Connection failed: " . $e->getMessage());
         }
     }
 
-    public static function getInstancia() {
-        if (!isset(self::$instancia)) {
-            self::$instancia = new Conexao();
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new Conexao();
         }
-        return self::$instancia;
+        return self::$instance->conexao;
     }
-
-    public function getConexao() {
-        return $this->conexao;
-}
-}
-?>
+} 
