@@ -244,11 +244,11 @@ $reservas = $controller->listarReservas();
                                     </div>
                                     <div class="form-group">
                                         <label for="data_reserva">Data de Início</label>
-                                        <input type="date" class="form-control" id="data_reserva" name="data_reserva" required min="<?php echo date('Y-m-d'); ?>">
+                                        <input type="date" class="form-control" id="data_reserva" name="data_reserva" required min="<?php echo date('Y-m-d'); ?>" onchange="validarDatas()">
                                     </div>
                                     <div class="form-group">
                                         <label for="data_termino">Data de Término</label>
-                                        <input type="date" class="form-control" id="data_termino" name="data_termino" required min="<?php echo date('Y-m-d'); ?>">
+                                        <input type="date" class="form-control" id="data_termino" name="data_termino" required min="<?php echo date('Y-m-d'); ?>" onchange="validarDatas()">
                                     </div>
                                     <div class="form-group">
                                         <label for="id_imovel">Imóvel</label>
@@ -320,6 +320,18 @@ $reservas = $controller->listarReservas();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function validarDatas() {
+            const dataInicio = document.getElementById('data_reserva').value;
+            const dataTermino = document.getElementById('data_termino').value;
+            
+            if (dataInicio && dataTermino) {
+                if (new Date(dataTermino) < new Date(dataInicio)) {
+                    alert('A data de término não pode ser anterior à data de início!');
+                    document.getElementById('data_termino').value = dataInicio;
+                }
+            }
+        }
+
         function editarImovel(id, descricao, valor) {
             document.getElementById('id_imovel').value = id;
             document.getElementById('descricao').value = descricao;

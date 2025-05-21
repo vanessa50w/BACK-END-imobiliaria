@@ -9,6 +9,12 @@ class ReservaDAO {
         $this->conexao = Conexao::getInstance();
     }
 
+    private function validarDatas($data_inicio, $data_termino) {
+        if (strtotime($data_termino) < strtotime($data_inicio)) {
+            throw new Exception("A data de término não pode ser anterior à data de início.");
+        }
+    }
+
     private function existeReserva($nome_cliente, $data_reserva, $id_imovel, $id = null) {
         try {
             $sql = "SELECT COUNT(*) FROM reserva 
@@ -70,6 +76,9 @@ class ReservaDAO {
             $data_termino = $reserva->getDataTermino();
             $id_imovel = $reserva->getIdImovel();
 
+            // Valida as datas
+            $this->validarDatas($data_reserva, $data_termino);
+
             // Verifica se o cliente já tem uma reserva na mesma data
             if ($this->existeReserva($nome_cliente, $data_reserva, $id_imovel)) {
                 throw new Exception("Este cliente já possui uma reserva para esta data.");
@@ -106,6 +115,9 @@ class ReservaDAO {
             $data_termino = $reserva->getDataTermino();
             $id_imovel = $reserva->getIdImovel();
             $id = $reserva->getId();
+
+            // Valida as datas
+            $this->validarDatas($data_reserva, $data_termino);
 
             // Verifica se o cliente já tem uma reserva na mesma data (excluindo a reserva atual)
             if ($this->existeReserva($nome_cliente, $data_reserva, $id_imovel, $id)) {
