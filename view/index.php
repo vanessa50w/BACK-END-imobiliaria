@@ -25,6 +25,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     );
                 }
                 break;
+            case 'editar_imovel':
+                if (!empty($_POST['id'])) {
+                    $imovel = $controller->buscarImovelParaEdicao(intval($_POST['id']));
+                    if ($imovel) {
+                        echo json_encode($imovel);
+                        exit;
+                    }
+                }
+                break;
+            case 'editar_reserva':
+                if (!empty($_POST['id'])) {
+                    $reserva = $controller->buscarReservaParaEdicao(intval($_POST['id']));
+                    if ($reserva) {
+                        echo json_encode($reserva);
+                        exit;
+                    }
+                }
+                break;
             case 'excluir_imovel':
                 if (!empty($_POST['id'])) {
                     $controller->excluirImovel(intval($_POST['id']));
@@ -154,6 +172,11 @@ $reservas = $controller->listarReservas();
                                                     <td>R$ <?php echo number_format($imovel->getValor(), 2, ',', '.'); ?></td>
                                                     <td>
                                                         <form method="POST" style="display: inline;">
+                                                            <input type="hidden" name="acao" value="editar_imovel">
+                                                            <input type="hidden" name="id" value="<?php echo $imovel->getId(); ?>">
+                                                            <button type="button" class="btn btn-warning btn-sm rounded-pill" onclick="editarImovel(<?php echo $imovel->getId(); ?>, '<?php echo htmlspecialchars($imovel->getDescricao()); ?>', <?php echo $imovel->getValor(); ?>)">Editar</button>
+                                                        </form>
+                                                        <form method="POST" style="display: inline;">
                                                             <input type="hidden" name="acao" value="excluir_imovel">
                                                             <input type="hidden" name="id" value="<?php echo $imovel->getId(); ?>">
                                                             <button type="submit" class="btn btn-danger btn-sm rounded-pill">Excluir</button>
@@ -233,6 +256,11 @@ $reservas = $controller->listarReservas();
                                                     <td>R$ <?php echo number_format($reserva['valor_imovel'], 2, ',', '.'); ?></td>
                                                     <td>
                                                         <form method="POST" style="display: inline;">
+                                                            <input type="hidden" name="acao" value="editar_reserva">
+                                                            <input type="hidden" name="id" value="<?php echo $reserva['id']; ?>">
+                                                            <button type="button" class="btn btn-warning btn-sm rounded-pill" onclick="editarReserva(<?php echo $reserva['id']; ?>, '<?php echo htmlspecialchars($reserva['nome_cliente']); ?>', '<?php echo $reserva['data_reserva']; ?>', <?php echo $reserva['id_imovel']; ?>)">Editar</button>
+                                                        </form>
+                                                        <form method="POST" style="display: inline;">
                                                             <input type="hidden" name="acao" value="excluir_reserva">
                                                             <input type="hidden" name="id" value="<?php echo $reserva['id']; ?>">
                                                             <button type="submit" class="btn btn-danger btn-sm rounded-pill">Excluir</button>
@@ -252,5 +280,55 @@ $reservas = $controller->listarReservas();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function editarImovel(id, descricao, valor) {
+            document.getElementById('id_imovel').value = id;
+            document.getElementById('descricao').value = descricao;
+            document.getElementById('valor').value = valor;
+            document.getElementById('imoveis-tab').click();
+        }
+
+        function editarReserva(id, nome_cliente, data_reserva, id_imovel) {
+            document.getElementById('id_reserva').value = id;
+            document.getElementById('nome_cliente').value = nome_cliente;
+            document.getElementById('data_reserva').value = data_reserva;
+            document.getElementById('id_imovel').value = id_imovel;
+            document.getElementById('reservas-tab').click();
+        }
+
+        // Função para limpar os formulários
+        function limparFormularioImovel() {
+            document.getElementById('id_imovel').value = '';
+            document.getElementById('descricao').value = '';
+            document.getElementById('valor').value = '';
+        }
+
+        function limparFormularioReserva() {
+            document.getElementById('id_reserva').value = '';
+            document.getElementById('nome_cliente').value = '';
+            document.getElementById('data_reserva').value = '';
+            document.getElementById('id_imovel').value = '';
+        }
+
+        // Adicionar botões de limpar aos formulários
+        document.addEventListener('DOMContentLoaded', function() {
+            const formImovel = document.querySelector('#imoveis form');
+            const formReserva = document.querySelector('#reservas form');
+
+            const btnLimparImovel = document.createElement('button');
+            btnLimparImovel.type = 'button';
+            btnLimparImovel.className = 'btn btn-secondary rounded-pill ms-2';
+            btnLimparImovel.textContent = 'Limpar';
+            btnLimparImovel.onclick = limparFormularioImovel;
+            formImovel.appendChild(btnLimparImovel);
+
+            const btnLimparReserva = document.createElement('button');
+            btnLimparReserva.type = 'button';
+            btnLimparReserva.className = 'btn btn-secondary rounded-pill ms-2';
+            btnLimparReserva.textContent = 'Limpar';
+            btnLimparReserva.onclick = limparFormularioReserva;
+            formReserva.appendChild(btnLimparReserva);
+        });
+    </script>
 </body>
 </html> 

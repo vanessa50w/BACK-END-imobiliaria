@@ -54,5 +54,30 @@ class ImobiliariaController {
     public function buscarReserva($id) {
         return $this->reservaDAO->buscarPorId($id);
     }
+
+    public function buscarImovelParaEdicao($id) {
+        $imovel = $this->imovelDAO->buscarPorId($id);
+        if ($imovel) {
+            return [
+                'id' => $imovel->getId(),
+                'descricao' => $imovel->getDescricao(),
+                'valor' => $imovel->getValor()
+            ];
+        }
+        return null;
+    }
+
+    public function buscarReservaParaEdicao($id) {
+        $reserva = $this->reservaDAO->buscarPorId($id);
+        if ($reserva) {
+            return [
+                'id' => $reserva->getId(),
+                'nome_cliente' => $reserva->getNomeCliente(),
+                'data_reserva' => $reserva->getDataReserva(),
+                'id_imovel' => $reserva->getIdImovel()
+            ];
+        }
+        return null;
+    }
 }
 ?> 
