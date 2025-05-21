@@ -141,7 +141,7 @@ $reservas = $controller->listarReservas();
                                     </div>
                                     <div class="form-group">
                                         <label for="valor">Valor</label>
-                                        <input type="number" class="form-control" id="valor" name="valor" step="0.01" required>
+                                        <input type="number" class="form-control" id="valor" name="valor" step="0.01" min="0.01" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary rounded-pill">Salvar</button>
                                 </form>
@@ -211,7 +211,7 @@ $reservas = $controller->listarReservas();
                                     </div>
                                     <div class="form-group">
                                         <label for="data_reserva">Data</label>
-                                        <input type="date" class="form-control" id="data_reserva" name="data_reserva" required>
+                                        <input type="date" class="form-control" id="data_reserva" name="data_reserva" required min="<?php echo date('Y-m-d'); ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="id_imovel">Imóvel</label>

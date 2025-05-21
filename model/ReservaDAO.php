@@ -12,8 +12,8 @@ class ReservaDAO {
     private function existeReserva($nome_cliente, $data_reserva, $id_imovel) {
         try {
             $sql = "SELECT COUNT(*) FROM reserva 
-                   WHERE nome_cliente = :nome_cliente 
-                   AND data_reserva = :data_reserva";
+                WHERE nome_cliente = :nome_cliente 
+                AND data_reserva = :data_reserva";
             $stmt = $this->conexao->prepare($sql);
             
             $stmt->bindParam(':nome_cliente', $nome_cliente);
@@ -30,8 +30,8 @@ class ReservaDAO {
     private function existeReservaImovel($id_imovel, $data_reserva) {
         try {
             $sql = "SELECT COUNT(*) FROM reserva 
-                   WHERE id_imovel = :id_imovel 
-                   AND data_reserva = :data_reserva";
+                WHERE id_imovel = :id_imovel 
+                AND data_reserva = :data_reserva";
             $stmt = $this->conexao->prepare($sql);
             
             $stmt->bindParam(':id_imovel', $id_imovel);
