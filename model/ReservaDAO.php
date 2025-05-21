@@ -1,12 +1,12 @@
 <?php
 require_once '../config/conexao.php';
-require_once 'Reserva.php';
+require_once '../controller/controller.php';
 
 class ReservaDAO{
     private $pdo;
 
     public function __construct() {
-        $this->pdo = Conexao::getInstance();
+        $this->pdo = Conexao::getInstancia();
         }
         private function logError($message) {
             error_log("[ReservaDAO] Erro: " . $message);

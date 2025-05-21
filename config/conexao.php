@@ -1,13 +1,27 @@
 <?php
-
 class Conexao {
-    private static $instance;
+    private static $instancia;
+    private $conexao;
 
-    public static function getConxao(){
-
-        if (!isset(self::$instance)){
-            self::$instance = new \PDO('pgsql:host=localhost;dbname=imobiliaria', 'root', '');
+    private function __construct() {
+        try {
+            $this->conexao = new PDO("mysql:host=localhost;dbname=imobiliaria", "usuario", "senha");
+            $this->conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conexao->exec("SET NAMES utf8");
+        } catch (PDOException $e) {
+            die("Erro na conexão: " . $e->getMessage());
         }
-        return self::$instance;
     }
+
+    public static function getInstancia() {
+        if (!isset(self::$instancia)) {
+            self::$instancia = new Conexao();
+        }
+        return self::$instancia;
+    }
+
+    public function getConexao() {
+        return $this->conexao;
 }
+}
+?>
