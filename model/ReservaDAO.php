@@ -13,18 +13,34 @@ class ReservaDAO {
         try {
             $sql = "SELECT COUNT(*) FROM reserva 
                    WHERE nome_cliente = :nome_cliente 
-                   AND data_reserva = :data_reserva 
-                   AND id_imovel = :id_imovel";
+                   AND data_reserva = :data_reserva";
             $stmt = $this->conexao->prepare($sql);
             
             $stmt->bindParam(':nome_cliente', $nome_cliente);
             $stmt->bindParam(':data_reserva', $data_reserva);
-            $stmt->bindParam(':id_imovel', $id_imovel);
             
             $stmt->execute();
             return $stmt->fetchColumn() > 0;
         } catch (PDOException $e) {
             echo "Erro ao verificar reserva: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    private function existeReservaImovel($id_imovel, $data_reserva) {
+        try {
+            $sql = "SELECT COUNT(*) FROM reserva 
+                   WHERE id_imovel = :id_imovel 
+                   AND data_reserva = :data_reserva";
+            $stmt = $this->conexao->prepare($sql);
+            
+            $stmt->bindParam(':id_imovel', $id_imovel);
+            $stmt->bindParam(':data_reserva', $data_reserva);
+            
+            $stmt->execute();
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            echo "Erro ao verificar reserva do imóvel: " . $e->getMessage();
             return false;
         }
     }
@@ -35,9 +51,14 @@ class ReservaDAO {
             $data_reserva = $reserva->getDataReserva();
             $id_imovel = $reserva->getIdImovel();
 
-            // Verifica se já existe uma reserva com os mesmos dados
+            // Verifica se o cliente já tem uma reserva na mesma data
             if ($this->existeReserva($nome_cliente, $data_reserva, $id_imovel)) {
-                throw new Exception("Já existe uma reserva cadastrada para este cliente neste imóvel e data.");
+                throw new Exception("Este cliente já possui uma reserva para esta data.");
+            }
+
+            // Verifica se o imóvel já está reservado para esta data
+            if ($this->existeReservaImovel($id_imovel, $data_reserva)) {
+                throw new Exception("Este imóvel já está reservado para esta data.");
             }
 
             $sql = "INSERT INTO reserva (nome_cliente, data_reserva, id_imovel) VALUES (:nome_cliente, :data_reserva, :id_imovel)";

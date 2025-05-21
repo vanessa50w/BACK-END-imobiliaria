@@ -11,11 +11,10 @@ class ImovelDAO {
 
     private function existeImovel($descricao, $valor) {
         try {
-            $sql = "SELECT COUNT(*) FROM imovel WHERE descricao = :descricao AND valor = :valor";
+            $sql = "SELECT COUNT(*) FROM imovel WHERE descricao = :descricao";
             $stmt = $this->conexao->prepare($sql);
             
             $stmt->bindParam(':descricao', $descricao);
-            $stmt->bindParam(':valor', $valor);
             
             $stmt->execute();
             return $stmt->fetchColumn() > 0;
@@ -25,17 +24,39 @@ class ImovelDAO {
         }
     }
 
+    private function existeImovelNoDia($descricao) {
+        try {
+            $hoje = date('Y-m-d');
+            $sql = "SELECT COUNT(*) FROM imovel WHERE descricao = :descricao AND DATE(data_cadastro) = :hoje";
+            $stmt = $this->conexao->prepare($sql);
+            
+            $stmt->bindParam(':descricao', $descricao);
+            $stmt->bindParam(':hoje', $hoje);
+            
+            $stmt->execute();
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            echo "Erro ao verificar imóvel no dia: " . $e->getMessage();
+            return false;
+        }
+    }
+
     public function inserir(Imovel $imovel) {
         try {
             $descricao = $imovel->getDescricao();
             $valor = $imovel->getValor();
 
-            // Verifica se já existe um imóvel com os mesmos dados
+            // Verifica se já existe um imóvel com a mesma descrição
             if ($this->existeImovel($descricao, $valor)) {
-                throw new Exception("Já existe um imóvel cadastrado com esta descrição e valor.");
+                throw new Exception("Já existe um imóvel cadastrado com esta descrição.");
             }
 
-            $sql = "INSERT INTO imovel (descricao, valor) VALUES (:descricao, :valor)";
+            // Verifica se já existe um imóvel com a mesma descrição no mesmo dia
+            if ($this->existeImovelNoDia($descricao)) {
+                throw new Exception("Não é possível cadastrar o mesmo imóvel mais de uma vez no mesmo dia.");
+            }
+
+            $sql = "INSERT INTO imovel (descricao, valor, data_cadastro) VALUES (:descricao, :valor, CURRENT_TIMESTAMP)";
             $stmt = $this->conexao->prepare($sql);
             
             $stmt->bindParam(':descricao', $descricao);
