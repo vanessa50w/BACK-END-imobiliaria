@@ -16,10 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 break;
             case 'salvar_reserva':
-                if (!empty($_POST['nome_cliente']) && !empty($_POST['data_reserva']) && !empty($_POST['id_imovel'])) {
+                if (!empty($_POST['nome_cliente']) && !empty($_POST['data_reserva']) && !empty($_POST['data_termino']) && !empty($_POST['id_imovel'])) {
                     $controller->salvarReserva(
                         trim($_POST['nome_cliente']),
                         $_POST['data_reserva'],
+                        $_POST['data_termino'],
                         intval($_POST['id_imovel']),
                         !empty($_POST['id_reserva']) ? intval($_POST['id_reserva']) : null
                     );
@@ -77,9 +78,16 @@ $reservas = $controller->listarReservas();
         }
         .table th {
             background-color: #f8f9fa;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .table td {
+            padding: 12px;
+            vertical-align: middle;
         }
         .card {
             margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .btn {
             border-radius: 50px;
@@ -106,6 +114,31 @@ $reservas = $controller->listarReservas();
         }
         .btn-sm {
             padding: 0.25rem 1rem;
+        }
+        .table-responsive {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .table {
+            margin-bottom: 0;
+        }
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .table .actions-column {
+            white-space: nowrap;
+            width: 1%;
+        }
+        .table .actions-column form {
+            display: inline-block;
+            margin: 0 2px;
+        }
+        .table .date-column {
+            white-space: nowrap;
+        }
+        .table .value-column {
+            text-align: right;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -210,8 +243,12 @@ $reservas = $controller->listarReservas();
                                         <input type="text" class="form-control" id="nome_cliente" name="nome_cliente" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="data_reserva">Data</label>
+                                        <label for="data_reserva">Data de Início</label>
                                         <input type="date" class="form-control" id="data_reserva" name="data_reserva" required min="<?php echo date('Y-m-d'); ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="data_termino">Data de Término</label>
+                                        <input type="date" class="form-control" id="data_termino" name="data_termino" required min="<?php echo date('Y-m-d'); ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="id_imovel">Imóvel</label>
@@ -235,15 +272,16 @@ $reservas = $controller->listarReservas();
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-sm">
+                                    <table class="table">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Cliente</th>
-                                                <th>Data</th>
+                                                <th class="date-column">Data Início</th>
+                                                <th class="date-column">Data Término</th>
                                                 <th>Imóvel</th>
-                                                <th>Valor</th>
-                                                <th>Ações</th>
+                                                <th class="value-column">Valor</th>
+                                                <th class="actions-column">Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -251,14 +289,15 @@ $reservas = $controller->listarReservas();
                                                 <tr>
                                                     <td><?php echo $reserva['id']; ?></td>
                                                     <td><?php echo $reserva['nome_cliente']; ?></td>
-                                                    <td><?php echo date('d/m/Y', strtotime($reserva['data_reserva'])); ?></td>
+                                                    <td class="date-column"><?php echo date('d/m/Y', strtotime($reserva['data_reserva'])); ?></td>
+                                                    <td class="date-column"><?php echo date('d/m/Y', strtotime($reserva['data_termino'])); ?></td>
                                                     <td><?php echo $reserva['descricao_imovel']; ?></td>
-                                                    <td>R$ <?php echo number_format($reserva['valor_imovel'], 2, ',', '.'); ?></td>
-                                                    <td>
+                                                    <td class="value-column">R$ <?php echo number_format($reserva['valor_imovel'], 2, ',', '.'); ?></td>
+                                                    <td class="actions-column">
                                                         <form method="POST" style="display: inline;">
                                                             <input type="hidden" name="acao" value="editar_reserva">
                                                             <input type="hidden" name="id" value="<?php echo $reserva['id']; ?>">
-                                                            <button type="button" class="btn btn-warning btn-sm rounded-pill" onclick="editarReserva(<?php echo $reserva['id']; ?>, '<?php echo htmlspecialchars($reserva['nome_cliente']); ?>', '<?php echo $reserva['data_reserva']; ?>', <?php echo $reserva['id_imovel']; ?>)">Editar</button>
+                                                            <button type="button" class="btn btn-warning btn-sm rounded-pill" onclick="editarReserva(<?php echo $reserva['id']; ?>, '<?php echo htmlspecialchars($reserva['nome_cliente']); ?>', '<?php echo $reserva['data_reserva']; ?>', '<?php echo $reserva['data_termino']; ?>', <?php echo $reserva['id_imovel']; ?>)">Editar</button>
                                                         </form>
                                                         <form method="POST" style="display: inline;">
                                                             <input type="hidden" name="acao" value="excluir_reserva">
@@ -288,10 +327,11 @@ $reservas = $controller->listarReservas();
             document.getElementById('imoveis-tab').click();
         }
 
-        function editarReserva(id, nome_cliente, data_reserva, id_imovel) {
+        function editarReserva(id, nome_cliente, data_reserva, data_termino, id_imovel) {
             document.getElementById('id_reserva').value = id;
             document.getElementById('nome_cliente').value = nome_cliente;
             document.getElementById('data_reserva').value = data_reserva;
+            document.getElementById('data_termino').value = data_termino;
             document.getElementById('id_imovel').value = id_imovel;
             document.getElementById('reservas-tab').click();
         }
@@ -307,6 +347,7 @@ $reservas = $controller->listarReservas();
             document.getElementById('id_reserva').value = '';
             document.getElementById('nome_cliente').value = '';
             document.getElementById('data_reserva').value = '';
+            document.getElementById('data_termino').value = '';
             document.getElementById('id_imovel').value = '';
         }
 

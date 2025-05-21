@@ -30,8 +30,8 @@ class ImobiliariaController {
         }
     }
 
-    public function salvarReserva($nome_cliente, $data_reserva, $id_imovel, $id = null) {
-        $reserva = new Reserva($id, $nome_cliente, $data_reserva, $id_imovel);
+    public function salvarReserva($nome_cliente, $data_reserva, $data_termino, $id_imovel, $id = null) {
+        $reserva = new Reserva($id, $nome_cliente, $data_reserva, $data_termino, $id_imovel);
         if ($id) {
             return $this->reservaDAO->atualizar($reserva);
         } else {
@@ -74,6 +74,7 @@ class ImobiliariaController {
                 'id' => $reserva->getId(),
                 'nome_cliente' => $reserva->getNomeCliente(),
                 'data_reserva' => $reserva->getDataReserva(),
+                'data_termino' => $reserva->getDataTermino(),
                 'id_imovel' => $reserva->getIdImovel()
             ];
         }
