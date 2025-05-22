@@ -9,7 +9,7 @@ class ImovelDAO {
         $this->conexao = Conexao::getInstance();
     }
 
-    private function existeImovel($descricao, $valor) {
+    private function existeImovel($descricao) {
         try {
             $sql = "SELECT COUNT(*) FROM imovel WHERE descricao = :descricao";
             $stmt = $this->conexao->prepare($sql);
@@ -47,7 +47,7 @@ class ImovelDAO {
             $valor = $imovel->getValor();
 
             // Verifica se já existe um imóvel com a mesma descrição
-            if ($this->existeImovel($descricao, $valor)) {
+            if ($this->existeImovel($descricao)) {
                 throw new Exception("Já existe um imóvel cadastrado com esta descrição.");
             }
 
